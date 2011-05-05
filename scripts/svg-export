@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Copy the files in another directory, and work in this new directory, in order to avoid unexpected file loss.
+mkdir export-dir
+cp *.svg export-dir/
+cd export-dir
+
+
+echo "Exporting SVG files into PNG, EPS, PDF and AI files"
+for SVG in *.svg; do
+  echo "Exporting $SVG into PNG"
+  inkscape "$SVG" --export-png="$SVG.png" --export-area-drawing --export-area-snap
+
+  echo "Exporting $SVG into PNG at 180dpi"
+  inkscape "$SVG" --export-png="$SVG-x2.png" --export-area-drawing --export-area-snap --export-dpi=180
+
+  echo "Exporting $SVG into EPS"
+  inkscape "$SVG" --export-eps="$SVG.eps"
+
+  echo "Exporting $SVG into PDF"
+  inkscape "$SVG" --export-pdf="$SVG.pdf"
+
+  echo "Exporting $SVG into AI"
+  uniconvertor "$SVG" "$SVG.ai"
+done
+
+# Is there a way to directly rename the files while exporting?
+# If we put this in the 'for...in; do' it would be run each time the $SVG changes! (And each time, only one file would be renamed)
+# I bet it is better to run this once every file has been exported.
+echo "Renaming files"
+  rename 's/\.svg//' *.png
+  rename 's/-x2/_x2/' *.png
+  rename 's/\.svg//' *.eps
+  rename 's/\.svg//' *.pdf
+  rename 's/\.svg//' *.ai
+
+# It is easier to have a folder for each file format.
+# If we move *.png before moving *_x2.png, the *_x2.png files would be in png/ ! 
+echo "Moving files"
+  mkdir ai
+  mv *.ai ai/
+
+  mkdir eps
+  mv *.eps eps/
+
+  mkdir pdf
+  mv *.pdf pdf/
+
+  mkdir png-x2
+  mv *_x2.png png-x2/
+
+  mkdir png
+  mv *.png png/
+
+# We can remove these SVG files (we currently are in export-dir), since we have backup.
+rm -rf *.svg
+
+# Should we go back in the original directory?
+# cd ..
+echo "The files have been exported, renamed and moved in appropriate folders"
+echo "The resulting files should be found in the export-dir directory"
+
+
+exit 0
