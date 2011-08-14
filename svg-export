@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# In order to have a backup, we will be working in another directory, so we need to create it, and copy the files.
+# If this directory already exists, either way you have already run this script or you are in the wrong place.
+export_dir()
+{
+  mkdir backup && cp -R icons backup
+}
+
+already_done()
+{
+  echo "It seems as if you have already run this script ($0) before!"
+  echo "Please remove the 'export-dir' directory and/or check whether you are in the correct directory before running this script!"
+  exit 100
+}
+
+export_dir || already_done
+
+cd icons/small
+
+echo "Exporting SVG files into PNG at 90 and 180dpi, EPS, PDF and AI files"
+for SVG in *.svg;
+  do
+    NAME=${SVG/.svg/}
+
+    # Export SVG to PNG
+    inkscape "$SVG" --export-png="$NAME.png" --export-area-drawing --export-area-snap
+
+    # Export SVG to PNG at 180dpi
+    inkscape "$SVG" --export-png="$NAME-x2.png" --export-area-drawing --export-area-snap --export-dpi=180
+
+    # Export SVG to EPS
+    inkscape "$SVG" --export-eps="$NAME.eps"
+
+    # Export SVG to PDF
+    inkscape "$SVG" --export-pdf="$NAME.pdf"
+
+    # Export SVG to AI
+    uniconvertor "$SVG" "$NAME.ai"
+  done
+
+# I prefer that my PNG files are named name_x2.png instead of name-x2.png.
+# When exporting I had to export to $NAME-x2 because $NAME_x2 would be considered as another variable.
+# That's why I have to rename the files after exporting. Is there a better way to do so?
+rename 's/-x2/_x2/' *.png
+
+
+# It is easier to have a folder for each file format.
+# If we move *.png before moving *_x2.png, the *_x2.png files would be in png/ !
+echo "Moving files"
+  mkdir svg
+  mv *.svg svg/
+
+  mkdir ai
+  mv *.ai ai/
+
+  mkdir eps
+  mv *.eps eps/
+
+  mkdir pdf
+  mv *.pdf pdf/
+
+  mkdir png-x2
+  mv *_x2.png png-x2/
+
+  mkdir png
+  mv *.png png/
+
+echo "The SVG icons have been exported to PNG, PDF, EPS and AI."
+
+exit 0
