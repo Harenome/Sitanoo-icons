@@ -12,8 +12,23 @@ You are free to use, change and redistribute it under certain conditions.
 For further information please see the license file or visit http://creativecommons.org/licenses/by/3.0/
 
 
-Available files
-===============
-The icons have been designed using Inkscape 0.48.
-The EPS, PDF, PNG and SVG files have been created using Inkscape.
-The AI files have been created using Uniconvertor.
+How to use
+==========
+The source files can be found in src. To edit them, you need a vector graphic software with SVG support.
+You will find optimized SVG icons in the 'icons' folder.
+
+
+How to export SVG icons to PNG, PDF, AI and EPS
+===============================================
+Software needed
+---------------
+Make sure inkscape and uniconvertor are installed on your system.
+
+Debian-based distributions (run as root):
+apt-get install inkscape uniconvertor
+
+
+Exporting
+---------
+To export the SVG icons to PNG, PDF, AI and EPS, run the 'svg-export' script (make sure it is executable):
+./svg-export
