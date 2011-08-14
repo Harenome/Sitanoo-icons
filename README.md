@@ -20,7 +20,7 @@ You will find optimized SVG icons in the 'icons' folder.
 Make sure inkscape and uniconvertor are installed on your system.
 
 Debian-based distributions (run as root):
-```bash
+```
 apt-get install inkscape uniconvertor
 ```
 
@@ -28,6 +28,6 @@ Depending on your distribution of choice and your sources.list, package names ma
 
 ### Exporting
 To export the SVG icons to PNG, PDF, AI and EPS, run the 'svg-export' script (make sure it is executable):
-```bash
+```
 ./svg-export
 ```
